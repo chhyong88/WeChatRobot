@@ -34,80 +34,79 @@
 <p>应用程序核心PHP代码如下:</p>
 
 <pre><code>
-		<?php
-			define("TOKEN", "superman");
+	define("TOKEN", "superman");
 
-			$wechatObj = new wechatCallbackapiTest();
-			if (!isset($_GET['echostr'])) {
-				$wechatObj->responseMsg();
-			}else{
-				$wechatObj->valid();
-			}
+	$wechatObj = new wechatCallbackapiTest();
+	if (!isset($_GET['echostr'])) {
+		$wechatObj->responseMsg();
+	}else{
+		$wechatObj->valid();
+	}
 
-			class wechatCallbackapiTest
-			{
-			//验证签名
-			public function valid()
-			{
-				$echoStr = $_GET["echostr"];
-				$signature = $_GET["signature"];
-				$timestamp = $_GET["timestamp"];
-				$nonce = $_GET["nonce"];
-				$token = TOKEN;
-				$tmpArr = array($token, $timestamp, $nonce);
-				sort($tmpArr);
-				$tmpStr = implode($tmpArr);
-				$tmpStr = sha1($tmpStr);
-				if($tmpStr == $signature){
-					echo $echoStr;
-					exit;
-				}
-			}
+	class wechatCallbackapiTest
+	{
+	//验证签名
+	public function valid()
+	{
+		$echoStr = $_GET["echostr"];
+		$signature = $_GET["signature"];
+		$timestamp = $_GET["timestamp"];
+		$nonce = $_GET["nonce"];
+		$token = TOKEN;
+		$tmpArr = array($token, $timestamp, $nonce);
+		sort($tmpArr);
+		$tmpStr = implode($tmpArr);
+		$tmpStr = sha1($tmpStr);
+		if($tmpStr == $signature){
+			echo $echoStr;
+			exit;
+		}
+	}
 
-			//响应消息
-			public function responseMsg()
+	//响应消息
+	public function responseMsg()
+	{
+		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+		if (!empty($postStr)){
+			$this->logger("R ".$postStr);
+			$postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+			$RX_TYPE = trim($postObj->MsgType);
+			 
+			//消息类型
+			switch ($RX_TYPE)
 			{
-				$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
-				if (!empty($postStr)){
-					$this->logger("R ".$postStr);
-					$postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
-					$RX_TYPE = trim($postObj->MsgType);
-					 
-					//消息类型
-					switch ($RX_TYPE)
-					{
-						case "event":
-							$result = $this->receiveEvent($postObj);
-							break;
-						case "text":
-							$result = $this->receiveText($postObj);
-							break;
-						case "image":
-							$result = $this->receiveImage($postObj);
-							break;
-						case "location":
-							$result = $this->receiveLocation($postObj);
-							break;
-						case "voice":
-							$result = $this->receiveVoice($postObj);
-							break;
-						case "video":
-							$result = $this->receiveVideo($postObj);
-							break;
-						case "link":
-							$result = $this->receiveLink($postObj);
-							break;
-						default:
-							$result = "unknown msg type: ".$RX_TYPE;
-							break;
-					}
-					$this->logger("T ".$result);
-					echo $result;
-				}else {
-					echo "";
-					exit;
-				}
+				case "event":
+					$result = $this->receiveEvent($postObj);
+					break;
+				case "text":
+					$result = $this->receiveText($postObj);
+					break;
+				case "image":
+					$result = $this->receiveImage($postObj);
+					break;
+				case "location":
+					$result = $this->receiveLocation($postObj);
+					break;
+				case "voice":
+					$result = $this->receiveVoice($postObj);
+					break;
+				case "video":
+					$result = $this->receiveVideo($postObj);
+					break;
+				case "link":
+					$result = $this->receiveLink($postObj);
+					break;
+				default:
+					$result = "unknown msg type: ".$RX_TYPE;
+					break;
 			}
+			$this->logger("T ".$result);
+			echo $result;
+		}else {
+			echo "";
+			exit;
+		}
+	}
 
    
 
@@ -159,7 +158,7 @@
             .zip 文件
           </a>
           <a href="https://github.com/MyGHCode/WeChatRobot/tarball/master" class="button">
-            <small>Download</small>
+            <small>下载</small>
             .tar.gz 文件
           </a>
 
