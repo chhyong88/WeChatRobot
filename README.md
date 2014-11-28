@@ -12,4 +12,4 @@ WeChatRobot
 
 >> 效果演示 Demo
 
-<img src="img/demo.png" />
+<img src="img/demo.PNG" />
