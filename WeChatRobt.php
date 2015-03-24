@@ -320,8 +320,8 @@ $info=$getresult['weatherinfo'];
 
 $content="{$info['city']}的天气情况：\n";
 $content .= "今天天气:{$info['weather']}\n";
-$content .= "最低温度:{$info['temp1']}\n";
-$content .= "最高温度:{$info['temp2']}\n";
+$content .= "最高温度:{$info['temp1']}\n";
+$content .= "最低温度:{$info['temp2']}\n";
     
    
 }             
