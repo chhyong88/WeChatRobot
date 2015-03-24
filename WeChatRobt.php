@@ -314,7 +314,7 @@ class wechatCallbackapiTest
 if(!$getcontent){
 	return '暂时没有取到天气数据,请稍后再试';
 }else{
-
+$getcontent = substr($getcontent,0,-12);
 $getresult=json_decode($getcontent,true);
 $info=$getresult['weatherinfo'];
 
